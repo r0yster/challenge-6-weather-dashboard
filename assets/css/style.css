@@ -16,6 +16,22 @@
     list-style: none;
 }
 
+.h3 {
+   justify-content: right;
+}
+
+.curr-stats {
+   padding-top: 15px;
+}
+
+.card-img {
+   max-width: 40%;
+}
+
+.flex {
+   display: flex;
+}
+
 .flex-row {
    display: flex;
    flex-wrap: wrap;

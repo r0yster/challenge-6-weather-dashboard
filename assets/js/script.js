@@ -156,7 +156,7 @@ var getWeatherForecast = function(city) {
         if (response.ok) {
             response.json().then(function (data) {
                 $("#weather-forecast").empty();
-                for(var i = 0; i < data.list.length; i+=8) {
+                for(var i = 1; i < data.list.length; i+=8) {
 
                     day = {
                         date: data.list[i].dt_txt,
@@ -204,13 +204,13 @@ var displayForecast = function(weatherforecast) {
 
     for (var i = 0; i < weatherforecast.length; i++) {
 
-        cardDate = $('<h4>' + weatherforecast[i].date + '</h4>');
+        cardDate = $('<h4 class="card-title">' + weatherforecast[i].date + '</h4>');
         cardIcon = $('<img class="card-img" src=' + 'https://openweathermap.org/img/w/' + weatherforecast[i].img + '.png />');
-        cardTemp = $('<p>Temp: ' + weatherforecast[i].temp + ' °F</p>');
-        cardWind = $('<p>Wind: ' + weatherforecast[i].wind + ' MPH</p>');
-        cardHumid = $('<p>Humidity: ' + weatherforecast[i].humid + ' %</p>');
+        cardTemp = $('<p class="card-text">Temp: ' + weatherforecast[i].temp + ' °F</p>');
+        cardWind = $('<p class="card-text">Wind: ' + weatherforecast[i].wind + ' MPH</p>');
+        cardHumid = $('<p class="card-text">Humidity: ' + weatherforecast[i].humid + ' %</p>');
 
-        cardBody = $('<div calss="body"></div>');
+        cardBody = $('<div class="card-body"></div>');
 
         cardDate.appendTo(cardBody);
         cardIcon.appendTo(cardBody);
@@ -218,7 +218,7 @@ var displayForecast = function(weatherforecast) {
         cardWind.appendTo(cardBody);
         cardHumid.appendTo(cardBody);
 
-        card = $('<div class="card"></div>');
+        card = $('<div class="col card"></div>');
 
         cardBody.appendTo(card);
 
