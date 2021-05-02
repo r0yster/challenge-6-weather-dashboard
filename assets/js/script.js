@@ -4,9 +4,11 @@ var weatherContainerEl = document.querySelector('#weather-container');
 var currentWeatherEl = document.querySelector('#current-weather');
 var forecastWeatherEl = document.querySelector('#weather-forecast');
 var city = document.getElementById('currCity');
+var date = document.getElementById('currDate');
+var icon = document.getElementById('currIcon');
 var temp = document.getElementById('currTemp');
 var wind = document.getElementById('currWind');
-var humidity = document.getElementById('currHumidity');
+var humid = document.getElementById('currHumid');
 var uvindex = document.getElementById('currUVIndex');
 
 const apiKey = '83cef35d319c284fc9756c009b1203ae';
@@ -55,9 +57,10 @@ var getCurrentWeather = function(city) {
         lon: '',
         name: city,
         date: getDate(),
+        icon: '',
         temp: '',
         wind: '',
-        humidity: '',
+        humid: '',
         uvindex: ''
     }
 
@@ -70,9 +73,10 @@ var getCurrentWeather = function(city) {
                 cityWeather.lat = data.coord.lat;
                 cityWeather.lon = data.coord.lon;
                 cityWeather.name = data.name;
+                cityWeather.icon = data.weather[0].icon;
                 cityWeather.temp = data.main.temp;
                 cityWeather.wind = data.wind.speed;
-                cityWeather.humidity = data.main.humidity;
+                cityWeather.humid = data.main.humidity;
 
                 apiUrl = "https://api.openweathermap.org/data/2.5/onecall?" 
                             + "lat=" + cityWeather.lat 
@@ -115,7 +119,7 @@ var getWeatherForecast = function(city) {
         img: '',
         temp: '',
         wind: '',
-        humidity: ''
+        humid: ''
     }
 
     fetch(apiUrl).then(function (response) {
@@ -128,10 +132,11 @@ var getWeatherForecast = function(city) {
                         img: data.list[i].weather[0].icon,
                         temp: data.list[i].main.temp,
                         wind: data.list[i].wind.speed,
-                        humidity: data.list[i].main.humidity
+                        humid: data.list[i].main.humidity
                     }
                     forecast.push(day)
                 }
+                displayForecast(forecast);
             });
         } else {
             alert("Error: " + response.statusText);
@@ -140,26 +145,57 @@ var getWeatherForecast = function(city) {
     .catch(function(error) {
         alert("Unable to connect to weatherhub");
     });
-
-    displayForecast(forecast);
 };
 
 var displayCurrentWeather = function(weatherdata) {
 
     city.innerHTML = weatherdata.name;
+    date.innerHTML = weatherdata.date;
+    icon.setAttribute("src", "https://openweathermap.org/img/w/" + weatherdata.icon + ".png");
     temp.innerHTML = "Temp: " + weatherdata.temp + "°F";
     wind.innerHTML = "Wind: " + weatherdata.wind + "MPH";
-    humidity.innerHTML = "Humidity: " + weatherdata.humidity + "%";
+    humid.innerHTML = "Humidity: " + weatherdata.humid + "%";
     uvindex.innerHTML = "UV Index: " + weatherdata.uvindex;
 
 }
 
-var displayForecast = function() {
+var displayForecast = function(weatherforecast) {
+    var cardDate = '';
+    var cardIcon = '';
+    var cardTemp = '';
+    var cardWind = '';
+    var cardHumid = '';
 
-}
+    var card = '';
+    var cardBody = '';
+
+    for (var i = 0; i < weatherforecast.length; i++) {
+
+        cardDate = $('<h4>' + weatherforecast[i].date + '</h4>');
+        cardIcon = $('<img class="card-img" src=' + 'https://openweathermap.org/img/w/' + weatherforecast[i].img + '.png />');
+        cardTemp = $('<p>' + weatherforecast[i].temp + '°F</p>');
+        cardWind = $('<p>' + weatherforecast[i].wind + 'MPH</p>');
+        cardHumid = $('<p>' + weatherforecast[i].humid + '%</p>');
+
+        cardBody = $('<div calss="body"></div>');
+
+        cardDate.appendTo(cardBody);
+        cardIcon.appendTo(cardBody);
+        cardTemp.appendTo(cardBody);
+        cardWind.appendTo(cardBody);
+        cardHumid.appendTo(cardBody);
+
+        card = $('<div class="card"></div>');
+
+        cardBody.appendTo(card);
+
+        card.appendTo('#weather-forecast');
+    }
+};
 
 
 
 
 
 userFormEl.addEventListener("submit", formSubmitHandler)
+
