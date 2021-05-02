@@ -14,7 +14,7 @@ var lastCity = '';
 
 const apiKey = '83cef35d319c284fc9756c009b1203ae';
 
-// date helper function (high possibility of removal)
+// helper functions
 var getDate = function() {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -23,6 +23,29 @@ var getDate = function() {
 
     today = mm + '/' + dd + '/' + yyyy;
     return today;
+}
+
+var calcUV = function(index) {
+    console.log(index);
+    var color = '';
+
+    if (index < 3) {
+        color = '#34eb77';
+
+    } else if (index >= 3 && index < 6) {
+        color = '#ebd234';
+
+    } else if (index >= 6 && index < 8) {
+        color = '#ff700a';
+
+    } else if (index >= 8 && index < 10) {
+        color = '#ff0000';
+
+    } else {
+        color = '#d934eb';
+    }
+
+    return color;
 }
 
 var createCityBtn = function (loc, cityname) {
@@ -61,12 +84,10 @@ var formSubmitHandler = function(event) {
 };
 
 var buttonHandler = function(event) {
-    console.log("clicked me");
+
     var target = event.target;
-    console.log(target.type);
+
     if (target.type === 'button') {
-        console.log("made it here");
-        console.log(target.id);
         var city = target.id
         getCurrentWeather(city);
         getWeatherForecast(city);
@@ -136,7 +157,7 @@ var getCurrentWeather = function(city) {
 };
 
 var getWeatherForecast = function(city) {
-    console.log("get weatherforecast called");
+
     var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" 
     + city 
     + "&units=imperial&APPID=" 
@@ -180,25 +201,26 @@ var getWeatherForecast = function(city) {
 
 // display weather methods
 var displayCurrentWeather = function(weatherdata) {
-    console.log("get weatherforecast called");
+
+    var uvcolor = calcUV(weatherdata.uvindex);
+
     city.innerHTML = weatherdata.name;
     date.innerHTML = weatherdata.date;
     icon.setAttribute("src", "https://openweathermap.org/img/w/" + weatherdata.icon + ".png");
     temp.innerHTML = "Temp: " + weatherdata.temp + "°F";
     wind.innerHTML = "Wind: " + weatherdata.wind + "MPH";
     humid.innerHTML = "Humidity: " + weatherdata.humid + "%";
-    uvindex.innerHTML = "UV Index: " + weatherdata.uvindex;
+    uvindex.innerHTML = "UV Index: <span style='background-color:" + uvcolor + ";' color:white;>" + weatherdata.uvindex + "</span>";
 
 }
 
 var displayForecast = function(weatherforecast) {
-    console.log(weatherforecast);
+
     var cardDate = '';
     var cardIcon = '';
     var cardTemp = '';
     var cardWind = '';
     var cardHumid = '';
-
     var card = '';
     var cardBody = '';
 
