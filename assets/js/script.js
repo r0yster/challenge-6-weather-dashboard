@@ -29,7 +29,9 @@ var formSubmitHandler = function(event) {
     var city = cityInputEl.value.trim();
     
     if (city) {
-        getCityWeather(city);
+
+        getCurrentWeather(city);
+        getWeatherForecast(city);
 
         // clear old content
         /*
@@ -41,7 +43,7 @@ var formSubmitHandler = function(event) {
     }  
 };
 
-var getCityWeather = async function(city) {
+var getCurrentWeather = function(city) {
     // format the weather api
     var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" 
                     + city 
@@ -81,7 +83,7 @@ var getCityWeather = async function(city) {
                     if(response.ok) {
                         response.json().then(function(data) {
                             cityWeather.uvindex = data.current.uvi;
-                            displayWeather(cityWeather);
+                            displayCurrentWeather(cityWeather);
                         });
                     } else {
                         alert("Error: " + response.statusText);
@@ -100,13 +102,64 @@ var getCityWeather = async function(city) {
     });
 };
 
-var displayWeather = function(weatherdata) {
+var getWeatherForecast = function(city) {
+    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" 
+    + city 
+    + "&units=imperial&APPID=" 
+    + apiKey;
+    
+    var forecast = [];
+
+    var day = {
+        date: '',
+        img: '',
+        temp: '',
+        wind: '',
+        humidity: ''
+    }
+
+    fetch(apiUrl).then(function (response) {
+        if (response.ok) {
+            response.json().then(function (data) {
+                for(var i = 0; i < data.list.length; i+=8) {
+
+                    day = {
+                        date: data.list[i].dt_txt,
+                        img: data.list[i].weather[0].icon,
+                        temp: data.list[i].main.temp,
+                        wind: data.list[i].wind.speed,
+                        humidity: data.list[i].main.humidity
+                    }
+                    forecast.push(day)
+                }
+            });
+        } else {
+            alert("Error: " + response.statusText);
+        }
+    })
+    .catch(function(error) {
+        alert("Unable to connect to weatherhub");
+    });
+
+    displayForecast(forecast);
+};
+
+var displayCurrentWeather = function(weatherdata) {
 
     city.innerHTML = weatherdata.name;
-    temp.innerHTML = weatherdata.temp;
-    wind.innerHTML = weatherdata.wind;
-    humidity.innerHTML = weatherdata.humidity;
-    uvindex.innerHTML = weatherdata.uvindex;
+    temp.innerHTML = "Temp: " + weatherdata.temp + "°F";
+    wind.innerHTML = "Wind: " + weatherdata.wind + "MPH";
+    humidity.innerHTML = "Humidity: " + weatherdata.humidity + "%";
+    uvindex.innerHTML = "UV Index: " + weatherdata.uvindex;
 
 }
-userFormEl.addEventListener("submit", formSubmitHandler);
+
+var displayForecast = function() {
+
+}
+
+
+
+
+
+userFormEl.addEventListener("submit", formSubmitHandler)
