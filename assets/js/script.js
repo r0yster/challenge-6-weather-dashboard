@@ -26,7 +26,7 @@ var getDate = function() {
 }
 
 var calcUV = function(index) {
-    console.log(index);
+    
     var color = '';
 
     if (index < 3) {
