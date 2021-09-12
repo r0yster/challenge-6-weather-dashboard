@@ -10,4 +10,4 @@ Features
 - Displays current and future forecast
 
 
-live site : https://r0yster.github.io/challenge-6-weather-dashboard/
+live site : https://r0yster.github.io/weather-dashboard/
